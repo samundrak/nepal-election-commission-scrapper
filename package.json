@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsnd --respawn src/index.ts"
+    "dev": "tsnd --respawn src/index.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "Samundra Khatri",
@@ -29,10 +30,12 @@
     "bullmq": "^1.82.0",
     "expres": "^0.0.5",
     "express": "^4.18.1",
+    "html-table-to-json": "^1.0.0",
     "mysql2": "^2.3.3",
     "node-html-parser": "^5.3.3",
     "ts-node": "^10.7.0",
     "ts-node-dev": "^1.1.8",
+    "typescript": "^4.6.4",
     "uui": "^1.0.7",
     "uuid": "^8.3.2"
   }

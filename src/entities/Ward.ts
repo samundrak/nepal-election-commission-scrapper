@@ -3,13 +3,13 @@ import { CustomBaseEntity } from "./CustomBaseEntity";
 import State from "./State";
 
 @Entity()
-export default class District extends CustomBaseEntity {
+export default class Ward extends CustomBaseEntity {
   @Property()
   name!: string;
 
   @Property()
-  districtId!: string;
+  wardId!: string;
 
   @Property()
-  stateId!: string;
+  municipalId!: string;
 }

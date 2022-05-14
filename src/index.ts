@@ -24,11 +24,10 @@ async function main() {
     return res.send(200);
   });
 
-  // states.forEach((state) => {
-  //   myQueue.add(JobTypeEnum.STATE, state);
-  // });
-  // myQueue.add(JobTypeEnum.STATE, states[0]);
+  states.forEach((state) => {
+    myQueue.add(JobTypeEnum.STATE, state);
+  });
 
-  // queueWorker(myQueue, orm.em);
+  queueWorker(myQueue, orm.em);
 }
 main();

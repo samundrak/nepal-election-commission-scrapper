@@ -5,19 +5,35 @@ import { IDataFetchResponse } from "../interfaces/IDataFetchResponse";
 import { IStandardData } from "../interfaces/IStandardData";
 import { queueName, redisConnection } from "../queue";
 import { DataFetchStrategy } from "../Strategies/DataFetchStrategy";
+import { DistrictStrategy } from "../Strategies/DistrictStrategy";
+import { ElectionCentreStrategy } from "../Strategies/ElectionCentreStrategy";
+import { MunicipalStrategy } from "../Strategies/MunicipalStrategy";
 import StateStrategy from "../Strategies/StateStrategy";
+import { WardStrategy } from "../Strategies/WardStrategy";
 
 export default function (queue: Queue, em: EntityManager) {
   const worker = new Worker(
     queueName,
     async (job: Job<IStandardData>) => {
+      let df: DataFetchStrategy;
       if (job.name === JobTypeEnum.STATE) {
-        const df = new DataFetchStrategy(new StateStrategy());
-        return await df.fetch(em, job.data);
+        df = new DataFetchStrategy(new StateStrategy());
       }
       if (job.name === JobTypeEnum.DISTRICT) {
-        console.log("fetch district");
+        df = new DataFetchStrategy(new DistrictStrategy());
       }
+
+      if (job.name === JobTypeEnum.MUNCIPAL) {
+        df = new DataFetchStrategy(new MunicipalStrategy());
+      }
+
+      if (job.name === JobTypeEnum.WARD) {
+        df = new DataFetchStrategy(new WardStrategy());
+      }
+      if (job.name === JobTypeEnum.LOCAL_CENTRE) {
+        df = new DataFetchStrategy(new ElectionCentreStrategy());
+      }
+      return await df.fetch(em, job.data);
     },
     {
       connection: redisConnection,
@@ -25,13 +41,32 @@ export default function (queue: Queue, em: EntityManager) {
   );
 
   worker.on("completed", async (job, returnValue: IDataFetchResponse) => {
-    if (!returnValue.next) return;
+    let df: DataFetchStrategy;
     if (job.name === JobTypeEnum.STATE) {
-      const df = new DataFetchStrategy(new StateStrategy());
-      await df.save(em, job.data);
-      returnValue.payload.forEach((district) => {
-        queue.add(returnValue.next, district);
-      });
+      df = new DataFetchStrategy(new StateStrategy());
     }
+    if (job.name === JobTypeEnum.DISTRICT) {
+      df = new DataFetchStrategy(new DistrictStrategy());
+    }
+
+    if (job.name === JobTypeEnum.MUNCIPAL) {
+      df = new DataFetchStrategy(new MunicipalStrategy());
+    }
+
+    if (job.name === JobTypeEnum.WARD) {
+      df = new DataFetchStrategy(new WardStrategy());
+    }
+    if (job.name === JobTypeEnum.LOCAL_CENTRE) {
+      df = new DataFetchStrategy(new ElectionCentreStrategy());
+    }
+
+    await df.save(em, job.data);
+    if (!returnValue.next) return;
+    returnValue.payload.value.forEach((district) => {
+      queue.add(returnValue.next, {
+        value: district,
+        parent: returnValue.payload.parent,
+      });
+    });
   });
 }

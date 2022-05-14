@@ -14,15 +14,20 @@ export default class StateStrategy implements IDataFetchStrategy {
       state: data.code,
       list_type: "district",
     };
-    console.log(`Fetching data ${data.code}`, payload);
+    console.log(`Fetching data ${JobTypeEnum.STATE}  ${data.code}`, payload);
     const response = await standardAPICall(api, payload);
-    console.log(`Fetched data ${data.code}`, payload);
+    console.log(`Fetched data ${JobTypeEnum.STATE} ${data.code}`, payload);
 
     const state = await em.findOne(State, { stateId: data.code });
     if (state) {
       return {
         next: null,
-        payload: [],
+        payload: {
+          value: [],
+          parent: {
+            [JobTypeEnum.STATE]: data,
+          },
+        },
       };
     }
     const districts = transformHTMLOptionsToStandardData(
@@ -33,7 +38,12 @@ export default class StateStrategy implements IDataFetchStrategy {
     }));
     return {
       next: JobTypeEnum.DISTRICT,
-      payload: districts,
+      payload: {
+        value: districts,
+        parent: {
+          [JobTypeEnum.STATE]: data,
+        },
+      },
     };
   }
 

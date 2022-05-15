@@ -31,7 +31,7 @@ export class ElectionCentreStrategy implements IDataFetchStrategy {
       reg_centre: data.value.code,
     };
     const state = await em.findOne(ElectionCentre, {
-      electionCentreId: data.code,
+      electionCentreId: data.value.code,
     });
     if (state) {
       return {

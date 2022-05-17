@@ -74,7 +74,9 @@ export default function (queue: Queue, em: EntityManager) {
           value: district,
           parent: returnValue.payload.parent,
         },
-        {}
+        {
+          delay: 500,
+        }
       );
     });
   });

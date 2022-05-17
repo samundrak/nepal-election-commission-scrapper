@@ -7,11 +7,10 @@ import { Worker, Job, Queue, QueueScheduler } from "bullmq";
 export const serverAdapter = new ExpressAdapter();
 export const queueName = "dataFetching";
 export const redisConnection = new IORedis(9002);
-const scheduler = new QueueScheduler("election");
-
 export const myQueue = new Queue(queueName, {
   connection: redisConnection,
 });
+const scheduler = new QueueScheduler(queueName);
 
 createBullBoard({
   queues: [new BullMQAdapter(myQueue)],

@@ -32,6 +32,7 @@ export class ElectionCentreStrategy implements IDataFetchStrategy {
     };
     const state = await em.findOne(ElectionCentre, {
       electionCentreId: data.value.code,
+      wardId: payload.ward,
     });
     if (state) {
       return {
@@ -87,8 +88,8 @@ export class ElectionCentreStrategy implements IDataFetchStrategy {
   async save(em: EntityManager, data) {
     const state = new ElectionCentre();
     state.name = data.value.name;
-    state.wardId = data.value.code;
-    state.electionCentreId = data.value.parent;
+    state.wardId = data.value.parent;
+    state.electionCentreId = data.value.code;
     await em.persistAndFlush(state);
     return true;
   }

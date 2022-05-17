@@ -17,19 +17,22 @@ async function main() {
   /**
    * This remove every thing in queue
    */
-  app.get("/obliterate", (res) => {
+  app.get("/obliterate", (req, res) => {
     myQueue.obliterate({
       force: true,
     });
     return res.send(200);
   });
 
-  app.get("/start", () => {
+  app.get("/start", (req, res) => {
     states.forEach((state) => {
       myQueue.add(JobTypeEnum.STATE, state);
     });
-
+    res.send(200);
+  });
+  app.get("/process", (req, res) => {
     queueWorker(myQueue, orm.em);
+    res.send(200);
   });
 }
 main();

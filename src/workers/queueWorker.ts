@@ -64,69 +64,16 @@ export default function (queue: Queue, em: EntityManager) {
     await df.save(em, job.data);
     if (!returnValue.next) return;
     returnValue.payload.value.forEach((district) => {
-      queue.add(returnValue.next, {
-        value: district,
-        parent: returnValue.payload.parent,
-      });
-    });
-  });
-
-  const worker1 = new Worker(
-    queueName,
-    async (job: Job<IStandardData>) => {
-      let df: DataFetchStrategy;
-      if (job.name === JobTypeEnum.STATE) {
-        df = new DataFetchStrategy(new StateStrategy());
-      }
-      if (job.name === JobTypeEnum.DISTRICT) {
-        df = new DataFetchStrategy(new DistrictStrategy());
-      }
-
-      if (job.name === JobTypeEnum.MUNCIPAL) {
-        df = new DataFetchStrategy(new MunicipalStrategy());
-      }
-
-      if (job.name === JobTypeEnum.WARD) {
-        df = new DataFetchStrategy(new WardStrategy());
-      }
-      if (job.name === JobTypeEnum.LOCAL_CENTRE) {
-        df = new DataFetchStrategy(new ElectionCentreStrategy());
-      }
-      return await df.fetch(em, job.data);
-    },
-    {
-      connection: redisConnection,
-      concurrency: 10,
-    }
-  );
-
-  worker1.on("completed", async (job, returnValue: IDataFetchResponse) => {
-    let df: DataFetchStrategy;
-    if (job.name === JobTypeEnum.STATE) {
-      df = new DataFetchStrategy(new StateStrategy());
-    }
-    if (job.name === JobTypeEnum.DISTRICT) {
-      df = new DataFetchStrategy(new DistrictStrategy());
-    }
-
-    if (job.name === JobTypeEnum.MUNCIPAL) {
-      df = new DataFetchStrategy(new MunicipalStrategy());
-    }
-
-    if (job.name === JobTypeEnum.WARD) {
-      df = new DataFetchStrategy(new WardStrategy());
-    }
-    if (job.name === JobTypeEnum.LOCAL_CENTRE) {
-      df = new DataFetchStrategy(new ElectionCentreStrategy());
-    }
-
-    await df.save(em, job.data);
-    if (!returnValue.next) return;
-    returnValue.payload.value.forEach((district) => {
-      queue.add(returnValue.next, {
-        value: district,
-        parent: returnValue.payload.parent,
-      });
+      queue.add(
+        returnValue.next,
+        {
+          value: district,
+          parent: returnValue.payload.parent,
+        },
+        {
+          delay: 500,
+        }
+      );
     });
   });
 }

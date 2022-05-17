@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsnd --respawn src/index.ts",
+    "tsnd":"ts-node src/index.ts",
     "build": "tsc"
   },
   "keywords": [],

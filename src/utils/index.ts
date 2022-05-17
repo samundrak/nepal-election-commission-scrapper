@@ -3,7 +3,7 @@ import { IStandardData } from "../interfaces/IStandardData";
 import axios from "axios";
 import HtmlTableToJson from "html-table-to-json";
 
-export function getVoterListFromRawHTML(html: string) {
+export function getVoterListFromRawHTML(html: string, cb: (item) => any) {
   const dom = parse(html);
 
   const data = HtmlTableToJson.parse(dom.querySelector("#tbl_data").outerHTML);
@@ -13,7 +13,7 @@ export function getVoterListFromRawHTML(html: string) {
 
     const [fatherName, motherName] = (parentsName || "")?.split("/");
 
-    return {
+    return cb({
       voterId,
       voterName,
       age,
@@ -21,7 +21,7 @@ export function getVoterListFromRawHTML(html: string) {
       spouseName,
       fatherName,
       motherName,
-    };
+    });
   });
 }
 

@@ -53,7 +53,7 @@ export class ElectionCentreStrategy implements IDataFetchStrategy {
       `Fetched data ${JobTypeEnum.LOCAL_CENTRE} ${data.code}`,
       payload
     );
-    const entitties = getVoterListFromRawHTML(response.data).map((item) => {
+    const entitties = getVoterListFromRawHTML(response.data, (item) => {
       const voter = new Voter();
       voter.age = item.age;
       voter.spouseName = item.spouseName;

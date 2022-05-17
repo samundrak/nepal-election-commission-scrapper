@@ -60,8 +60,10 @@ export default function (queue: Queue, em: EntityManager) {
     if (job.name === JobTypeEnum.LOCAL_CENTRE) {
       df = new DataFetchStrategy(new ElectionCentreStrategy());
     }
+    if (!(job.name === JobTypeEnum.STATE && !returnValue.next)) {
+      await df.save(em, job.data);
+    }
 
-    await df.save(em, job.data);
     if (!returnValue.next) return;
     returnValue.payload.value.forEach((district) => {
       queue.add(returnValue.next, {

@@ -10,7 +10,6 @@ export const redisConnection = new IORedis(9002);
 export const myQueue = new Queue(queueName, {
   connection: redisConnection,
 });
-const scheduler = new QueueScheduler(queueName);
 
 createBullBoard({
   queues: [new BullMQAdapter(myQueue)],

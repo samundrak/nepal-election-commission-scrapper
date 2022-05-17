@@ -38,10 +38,6 @@ export default function (queue: Queue, em: EntityManager) {
     {
       connection: redisConnection,
       concurrency: 10,
-      limiter: {
-        max: 10,
-        duration: 1000,
-      },
     }
   );
 
@@ -74,9 +70,7 @@ export default function (queue: Queue, em: EntityManager) {
           value: district,
           parent: returnValue.payload.parent,
         },
-        {
-          delay: 500,
-        }
+        {}
       );
     });
   });

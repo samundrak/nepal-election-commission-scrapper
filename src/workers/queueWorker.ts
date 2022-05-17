@@ -37,6 +37,7 @@ export default function (queue: Queue, em: EntityManager) {
     },
     {
       connection: redisConnection,
+      concurrency: 5,
     }
   );
 

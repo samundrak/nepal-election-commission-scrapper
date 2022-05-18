@@ -30,21 +30,7 @@ export class ElectionCentreStrategy implements IDataFetchStrategy {
       ward: typedData.parent[JobTypeEnum.WARD].value.code,
       reg_centre: data.value.code,
     };
-    const state = await em.findOne(ElectionCentre, {
-      electionCentreId: data.value.code,
-      wardId: payload.ward,
-    });
-    if (state) {
-      return {
-        next: null,
-        payload: {
-          value: [],
-          parent: {
-            [JobTypeEnum.LOCAL_CENTRE]: data,
-          },
-        },
-      };
-    }
+
     console.log(
       `Fetching data ${JobTypeEnum.LOCAL_CENTRE} ${data.code}`,
       payload
@@ -86,6 +72,13 @@ export class ElectionCentreStrategy implements IDataFetchStrategy {
   }
 
   async save(em: EntityManager, data) {
+    const centreExist = await em.findOne(ElectionCentre, {
+      electionCentreId: data.value.code,
+      wardId: data.value.parent,
+    });
+    if (centreExist) {
+      return false;
+    }
     const state = new ElectionCentre();
     state.name = data.value.name;
     state.wardId = data.value.parent;

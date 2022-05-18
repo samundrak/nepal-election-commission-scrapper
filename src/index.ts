@@ -2,6 +2,7 @@ import { MikroORM } from "@mikro-orm/core";
 import type { MySqlDriver } from "@mikro-orm/mysql"; // or any other driver package
 
 import express from "express";
+import fromWard from "./controllers/from-ward";
 import states from "./datas/states";
 import { JobTypeEnum } from "./enum/JobTypEnum";
 import { myQueue, serverAdapter } from "./queue";
@@ -34,5 +35,7 @@ async function main() {
     queueWorker(myQueue, orm.em);
     res.send(200);
   });
+
+  app.get("/from-ward", fromWard(orm.em));
 }
 main();

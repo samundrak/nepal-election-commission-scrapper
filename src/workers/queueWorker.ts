@@ -75,7 +75,7 @@ export default function (queue: Queue, em: EntityManager) {
           parent: returnValue.payload.parent,
         },
         {
-          delay: 500,
+          delay: 300,
         }
       );
     });

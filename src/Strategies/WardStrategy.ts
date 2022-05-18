@@ -15,18 +15,7 @@ export class WardStrategy implements IDataFetchStrategy {
       list_type: "reg_centre",
       vdc: data.value.parent,
     };
-    const state = await em.findOne(Ward, { wardId: data.value.code });
-    if (state) {
-      return {
-        next: null,
-        payload: {
-          value: [],
-          parent: {
-            [JobTypeEnum.WARD]: data,
-          },
-        },
-      };
-    }
+
     console.log(
       `Fetching data ${JobTypeEnum.WARD} ${data.value.code}`,
       payload
@@ -52,6 +41,10 @@ export class WardStrategy implements IDataFetchStrategy {
   }
 
   async save(em: EntityManager, data) {
+    const stateExist = await em.findOne(Ward, { wardId: data.value.code });
+    if (stateExist) {
+      return false;
+    }
     const state = new Ward();
     state.name = data.value.name;
     state.wardId = data.value.code;

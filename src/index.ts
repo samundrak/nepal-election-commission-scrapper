@@ -31,11 +31,9 @@ async function main() {
     });
     res.send(200);
   });
-  app.get("/process", (req, res) => {
-    queueWorker(myQueue, orm.em);
-    res.send(200);
-  });
 
   app.get("/from-ward", fromWard(orm.em));
+
+  queueWorker(myQueue, orm.em);
 }
 main();

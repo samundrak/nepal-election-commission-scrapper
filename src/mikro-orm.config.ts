@@ -1,5 +1,5 @@
 export default {
-  entities: ["./src/entities"], // path to our JS entities (dist), relative to `baseDir`
+  entities: ["./dist/src/entities"], // path to our JS entities (dist), relative to `baseDir`
   entitiesTs: ["./src/entities"], // path to our TS entities (src), relative to `baseDir`
   dbName: "elections",
   type: "mysql",
